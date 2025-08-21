@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Squash Rankings</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .country { margin-bottom: 40px; }
+        .country h2 { margin-bottom: 10px; }
+        table { border-collapse: collapse; width: 50%; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        a { display: inline-block; margin-top: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Top 5 Squash Players by Country</h1>
+
+    {% for country, players in rankings.items() %}
+        <div class="country">
+            <h2>{{ country }}</h2>
+            {% if players %}
+            <table>
+                <tr>
+                    <th>Rank</th>
+                    <th>Name</th>
+                    <th>Points</th>
+                </tr>
+                {% for player in players %}
+                <tr>
+                    <td>{{ player.rank }}</td>
+                    <td>{{ player.name }}</td>
+                    <td>{{ player.points }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+            <a href="#">See all</a> <!-- Add full ranking link here -->
+            {% else %}
+                <p>No data available.</p>
+            {% endif %}
+        </div>
+    {% endfor %}
+</body>
+</html>

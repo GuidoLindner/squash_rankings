@@ -1,0 +1,52 @@
+[
+    {
+        "rank": "1",
+        "name": "CROUIN VICTOR",
+        "classification": "1I",
+        "moyenne": "1",
+        "license": "1705411G",
+        "league": "01-AUV-RA",
+        "club": "A074001",
+        "category": "Sénior"
+    },
+    {
+        "rank": "2",
+        "name": "MASOTTI BAPTISTE",
+        "classification": "1I",
+        "moyenne": "2",
+        "license": "1496037S",
+        "league": "07-HT-FRA",
+        "club": "A059002",
+        "category": "Sénior"
+    },
+    {
+        "rank": "3",
+        "name": "MARCHE GREGOIRE",
+        "classification": "1I",
+        "moyenne": "3",
+        "license": "1516512J",
+        "league": "01-AUV-RA",
+        "club": "A074001",
+        "category": "+35"
+    },
+    {
+        "rank": "4",
+        "name": "DUSSOURD AUGUSTE",
+        "classification": "1I",
+        "moyenne": "4",
+        "license": "1248507P",
+        "league": "10-N-AQUI",
+        "club": "A016002",
+        "category": "Sénior"
+    },
+    {
+        "rank": "5",
+        "name": "BONMALAIS SEBASTIEN",
+        "classification": "1I",
+        "moyenne": "5",
+        "license": "1381414H",
+        "league": "18-REU",
+        "club": "A974011",
+        "category": "Sénior"
+    }
+]
