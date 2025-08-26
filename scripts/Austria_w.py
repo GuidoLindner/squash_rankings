@@ -5,32 +5,32 @@ URL = "https://www.intooli.at/match22/seasons/24-25/ranks/95/32/2025-07-14/"
 
 def get_top5_women_austria(url=URL):
     try:
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
-        }
+        headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
         r = requests.get(url, headers=headers, timeout=15)
         r.raise_for_status()
         soup = BeautifulSoup(r.text, "html.parser")
 
-        # find all rows
-        rows = soup.select("table tr")  # each row is a <tr>
+        tables = soup.find_all('table')
+        table = tables[1]
+
+        # all rows after header
+        rows = table.find_all('tr')[1:]  
 
         top5 = []
-        for row in rows[1:6]:  # skip header row, take first 5 players
-            cols = row.find_all(["td", "th"])
-            if not cols:
-                continue
-            # from inspecting: col0 = rank, col1 = points, col3 or 4 = name
-            rank = cols[0].get_text(strip=True)
-            points = cols[1].get_text(strip=True)
-            # last column contains the name
-            name = cols[-1].get_text(strip=True)
-
-            top5.append({
-                "rank": rank,
-                "name": name,
-                "points": points
-            })
+        for row in rows:
+            cols = [c.text.strip() for c in row.find_all('td')]
+            if len(cols) >= 4:  # adjust based on table layout
+                rank = cols[0]
+                name = cols[4]  
+                points = cols[1]  # points likely here
+                if rank.isdigit():  # skip blank rows
+                    top5.append({
+                        'rank': rank,
+                        'name': name.strip("| ").strip(),
+                        'points': points
+                    })
+            if len(top5) == 5:
+                break
 
         return top5
 
