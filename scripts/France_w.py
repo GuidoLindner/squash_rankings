@@ -13,7 +13,7 @@ def get_top5():
         'ligue': '-1',
         'catage': '-1',
         'clt': '-1',
-        'genre': '6',
+        'genre': '7',
         'assimilate': '161',
         'integrate': '161',
         'ic_t': 'search_results',
@@ -69,7 +69,7 @@ def get_top5():
         cells = row.find_all('div')
         if len(cells) >= 9:
             player = {
-                'points': cells[0].text.strip().replace('male', ''),  # Remove 'male' prefix
+                'points': cells[0].text.strip().replace('female', ''),  # Remove 'female' prefix
                 'name': cells[1].text.strip(),
                 'rank': cells[3].text.strip(),
             }
