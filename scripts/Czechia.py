@@ -34,7 +34,7 @@ def get_top5():
                 continue
 
             top5.append({
-                'rank': rank,
+                'rank': str(len(top5) + 1),
                 'name': name,
                 'points': points
             })
