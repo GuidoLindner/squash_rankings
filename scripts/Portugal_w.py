@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import time
 
 def get_top5():
-    url = "https://www.sportyhq.com/ranking/group/721?iframe=true&web_view=true&list_only=true&filter=yes&show_title=true&application=widget"
+    url = "https://www.sportyhq.com/ranking/group/742?iframe=true&web_view=true&list_only=true&filter=yes&show_title=true&application=widget"
     
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
