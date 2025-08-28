@@ -7,36 +7,68 @@
         body { font-family: Arial, sans-serif; margin: 20px; }
         .country { margin-bottom: 40px; }
         .country h2 { margin-bottom: 10px; }
-        table { border-collapse: collapse; width: 50%; }
+        .tables { display: flex; gap: 40px; }
+        table { border-collapse: collapse; width: 300px; }
         th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background: #f0f0f0; }
         a { display: inline-block; margin-top: 5px; }
     </style>
 </head>
 <body>
     <h1>Top 5 Squash Players by Country</h1>
 
-    {% for country, players in rankings.items() %}
+    {% for country, data in rankings.items() %}
         <div class="country">
             <h2>{{ country }}</h2>
-            {% if players %}
-            <table>
-                <tr>
-                    <th>Rank</th>
-                    <th>Name</th>
-                    <th>Points</th>
-                </tr>
-                {% for player in players %}
-                <tr>
-                    <td>{{ player.rank }}</td>
-                    <td>{{ player.name }}</td>
-                    <td>{{ player.points }}</td>
-                </tr>
-                {% endfor %}
-            </table>
-            <a href="#">See all</a> <!-- Add full ranking link here -->
-            {% else %}
-                <p>No data available.</p>
-            {% endif %}
+            <div class="tables">
+                <!-- Men’s rankings -->
+                <div>
+                    <h3>Men</h3>
+                    {% if data.men %}
+                    <table>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Name</th>
+                            <th>Points</th>
+                        </tr>
+                        {% for player in data.men %}
+                        <tr>
+                            <td>{{ player.rank }}</td>
+                            <td>{{ player.name }}</td>
+                            <td>{{ player.points }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    <a href="#">See all</a>
+                    {% else %}
+                        <p>No data available.</p>
+                    {% endif %}
+                </div>
+
+                <!-- Women’s rankings -->
+                <div>
+                    <h3>Women</h3>
+                    {% if data.women %}
+                    <table>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Name</th>
+                            <th>Points</th>
+                        </tr>
+                        {% for player in data.women %}
+                        <tr>
+                            <td>{{ player.rank }}</td>
+                            <td>{{ player.name }}</td>
+                            <td>{{ player.points }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    <a href="#">See all</a>
+                    {% else %}
+                        <p>No women's rankings availavble.</p>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     {% endfor %}
 </body>

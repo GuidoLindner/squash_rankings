@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 
 URL = "https://www.intooli.at/match22/seasons/24-25/ranks/95/32/2025-07-14/"
 
-def get_top5_women_austria(url=URL):
+def get_top5(url=URL):
     try:
         headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
         r = requests.get(url, headers=headers, timeout=15)

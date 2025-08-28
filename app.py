@@ -1,10 +1,9 @@
 from flask import Flask, render_template
 import importlib
-import os
 
 app = Flask(__name__)
 
-# List of country scripts
+# List of country scripts (base names without _w)
 COUNTRIES = [
     "Austria", "Belarus", "Bulgaria", "Czechia", "Denmark", "England", "Estonia",
     "Finland", "France", "Germany", "Hungary", "Ireland", "Italy", "Latvia", "Lithuania",
@@ -17,15 +16,24 @@ def index():
     all_rankings = {}
 
     for country in COUNTRIES:
+        rankings = {"men": [], "women": []}
+
+        # Try men's rankings
         try:
-            module = importlib.import_module(f"scripts.{country}")
-            # Each scraper should have a function `get_top5()` returning a list of dicts:
-            # [{"rank": 1, "name": "Player Name", "points": 1234}, ...]
-            top5 = module.get_top5()
-            all_rankings[country] = top5
+            men_module = importlib.import_module(f"scripts.{country}")
+            rankings["men"] = men_module.get_top5()
         except Exception as e:
-            print(f"Error loading {country}: {e}")
-            all_rankings[country] = []
+            print(f"Error loading men’s rankings for {country}: {e}")
+
+        # Try women's rankings
+        try:
+            women_module = importlib.import_module(f"scripts.{country}_w")
+            rankings["women"] = women_module.get_top5()
+        except Exception as e:
+            # It's normal some countries don’t have women’s rankings
+            print(f"No women’s rankings for {country}")
+
+        all_rankings[country] = rankings
 
     return render_template("index.html", rankings=all_rankings)
 
