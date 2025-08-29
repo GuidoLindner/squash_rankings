@@ -23,9 +23,15 @@ def get_top5():
                 continue
 
             rank_text = tds[0].get_text(strip=True)
-            if not re.fullmatch(r"\d+", rank_text):
+            match = re.match(r'^\d+', rank_text)  # only take the first number
+            if not match:
                 continue
-            rank = int(rank_text)
+            rank = int(match.group(0))
+
+            match = re.match(r'(\d+)', rank_text)
+            if not match:
+                continue
+            rank = int(match.group(1))
 
             # Name: prefer the first link
             name_cell = tds[1]
