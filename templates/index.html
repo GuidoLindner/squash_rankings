@@ -7,106 +7,174 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            margin: 0;
+            background: #f5f7fa;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            padding: 40px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #333;
         }
 
         .country {
+            background: #ffffff;
+            padding: 20px;
             margin-bottom: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
 
         .country h2 {
-            margin-bottom: 10px;
+            margin-bottom: 20px;
+            color: #444;
         }
 
         .tables {
             display: flex;
-            gap: 40px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .ranking-card {
+            flex: 1;
+            min-width: 280px;
+            background: #f9fafc;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .ranking-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .ranking-card h3 {
+            margin-top: 0;
+            margin-bottom: 12px;
+            color: #555;
         }
 
         table {
             border-collapse: collapse;
-            width: 300px;
+            width: 100%;
         }
 
         th,
         td {
-            border: 1px solid #ccc;
+            border: 1px solid #ddd;
             padding: 8px;
             text-align: left;
+            font-size: 14px;
         }
 
         th {
-            background: #f0f0f0;
+            background: #eef1f6;
+            font-weight: bold;
         }
 
         a {
             display: inline-block;
-            margin-top: 5px;
+            margin-top: 10px;
+            color: #0066cc;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 16px;
+            margin-top: -10px;
+            margin-bottom: 40px;
         }
     </style>
 </head>
 
 <body>
-    <h1>Top 5 Squash Players by Country</h1>
+    <div class="container">
+        <h1>Top 5 Squash Players by Country</h1>
+        <p class="subtitle">
+            This website shows the top 5 squash players from each country.
+            The shown points are taken from the official rankings of each individual country.
+            Beneath each ranking, there is a link to the original ranking list of that country.
+        </p>
+        {% if last_updated %}
+        <p class="subtitle">Last updated: {{ last_updated }}</p>
+        {% endif %}
 
-    {% for country, data in rankings.items() %}
-    <div class="country">
-        <h2>{{ country }}</h2>
-        <div class="tables">
-            <!-- Men’s rankings -->
-            <div>
-                <h3>Men</h3>
-                {% if data.men %}
-                <table>
-                    <tr>
-                        <th>Rank</th>
-                        <th>Name</th>
-                        <th>Points</th>
-                    </tr>
-                    {% for player in data.men %}
-                    <tr>
-                        <td>{{ player.rank }}</td>
-                        <td>{{ player.name }}</td>
-                        <td>{{ player.points }}</td>
-                    </tr>
-                    {% endfor %}
-                </table>
-                {% if data.men_link %}
-                <a href="{{ data.men_link }}" target="_blank">See all</a>
-                {% endif %}
-                {% else %}
-                <p>No data available.</p>
-                {% endif %}
-            </div>
+        {% for country, data in rankings.items() %}
+        <div class="country">
+            <h2>{{ country }}</h2>
+            <div class="tables">
+                <!-- Men’s rankings -->
+                <div class="ranking-card">
+                    <h3>Men</h3>
+                    {% if data.men %}
+                    <table>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Name</th>
+                            <th>Points</th>
+                        </tr>
+                        {% for player in data.men %}
+                        <tr>
+                            <td>{{ player.rank }}</td>
+                            <td>{{ player.name }}</td>
+                            <td>{{ player.points }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    {% if data.men_link %}
+                    <a href="{{ data.men_link }}" target="_blank">See all</a>
+                    {% endif %}
+                    {% else %}
+                    <p>No data available.</p>
+                    {% endif %}
+                </div>
 
-            <!-- Women’s rankings -->
-            <div>
-                <h3>Women</h3>
-                {% if data.women %}
-                <table>
-                    <tr>
-                        <th>Rank</th>
-                        <th>Name</th>
-                        <th>Points</th>
-                    </tr>
-                    {% for player in data.women %}
-                    <tr>
-                        <td>{{ player.rank }}</td>
-                        <td>{{ player.name }}</td>
-                        <td>{{ player.points }}</td>
-                    </tr>
-                    {% endfor %}
-                </table>
-                {% if data.women_link %}
-                <a href="{{ data.women_link }}" target="_blank">See all</a>
-                {% endif %}
-                {% else %}
-                <p>No data available.</p>
-                {% endif %}
+                <!-- Women’s rankings -->
+                <div class="ranking-card">
+                    <h3>Women</h3>
+                    {% if data.women %}
+                    <table>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Name</th>
+                            <th>Points</th>
+                        </tr>
+                        {% for player in data.women %}
+                        <tr>
+                            <td>{{ player.rank }}</td>
+                            <td>{{ player.name }}</td>
+                            <td>{{ player.points }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    {% if data.women_link %}
+                    <a href="{{ data.women_link }}" target="_blank">See all</a>
+                    {% endif %}
+                    {% else %}
+                    <p>No women's rankings available.</p>
+                    {% endif %}
+                </div>
             </div>
         </div>
+        {% endfor %}
     </div>
-    {% endfor %}
 </body>
 
 </html>

@@ -19,8 +19,7 @@ RANKING_LINKS = {
         "women": "https://www.squash.or.at/ranglisten/ranking/"
     },
     "Belarus": {
-        # Make sure date changes
-        "men": "https://rankedin.com/en/ranking/10950?rankingType=1&ageGroup=1&week=2&year=2025" 
+        "men": "https://rankedin.com/en/ranking/10950?rankingType=1&ageGroup=1" 
         # No women’s rankings link
     },
     "Bulgaria": {
