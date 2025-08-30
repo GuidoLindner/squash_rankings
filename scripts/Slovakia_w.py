@@ -6,7 +6,7 @@ def get_top5():
     url = "https://www.squashtour.sk/rebricek/dospeli/zeny/#zebricek"
 
     # Fetch page
-    response = requests.get(url)
+    response = requests.get(url, timeout=15)
     response.raise_for_status()
 
     # Parse HTML

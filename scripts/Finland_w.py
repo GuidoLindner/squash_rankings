@@ -4,7 +4,7 @@ def get_top5():
     url = "https://api.ussquash.com/resources/rankings/9/current?divisions=1&pageNumber=1"
 
     try:
-        response = requests.get(url)
+        response = requests.get(url, timeout=15)
         response.raise_for_status()
         data = response.json()
 

@@ -21,7 +21,7 @@ def get_top5():
     }
 
     try:
-        resp = requests.post(url, json=payload, headers=HEADERS)
+        resp = requests.post(url, json=payload, headers=HEADERS, timeout=15)
         resp.raise_for_status()
         data = resp.json()
 

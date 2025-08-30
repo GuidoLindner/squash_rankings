@@ -26,7 +26,7 @@ def get_top5():
         s.get(url)
 
         # Now post the form selection (women + order by official ranking desc)
-        resp = s.post(url, data=payload)
+        resp = s.post(url, data=payload, timeout=15)
         resp.raise_for_status()
 
     soup = BeautifulSoup(resp.text, "html.parser")

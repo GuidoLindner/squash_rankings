@@ -16,7 +16,7 @@ def get_top5():
     }
 
     try:
-        response = requests.get(url, headers=headers, params=params)
+        response = requests.get(url, headers=headers, params=params, timeout=15)
         response.raise_for_status()
         content = response.text
         return parse_html_response(content)

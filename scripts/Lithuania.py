@@ -28,7 +28,7 @@ def get_top5():
             'Sec-Fetch-Site': 'same-site'
         }
 
-        response = requests.get(api_url, headers=headers)
+        response = requests.get(api_url, headers=headers, timeout=15)
         response.raise_for_status()
         data = response.json()
 

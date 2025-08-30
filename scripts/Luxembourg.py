@@ -5,7 +5,7 @@ import re
 def get_top5():
     url = "https://www.fsl.lu/2024_ranking/showrankings.php"
     try:
-        response = requests.get(url)
+        response = requests.get(url, timeout=15)
         response.raise_for_status()
 
         soup = BeautifulSoup(response.text, 'html.parser')

@@ -47,7 +47,7 @@ def get_top5():
     session.get(referrer)
 
     # Then, POST the request
-    response = session.post(url, data=payload)
+    response = session.post(url, data=payload, timeout=15)
 
     if response.status_code != 200:
         print(f"Failed to retrieve data: {response.status_code}")

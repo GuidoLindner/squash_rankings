@@ -39,6 +39,6 @@ def get_top5(url=URL):
         return []
 
 if __name__ == "__main__":
-    players = get_top5_women_austria()
+    players = get_top5()
     for p in players:
         print(f"Rank: {p['rank']}, Name: {p['name']}, Points: {p['points']}")
