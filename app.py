@@ -1,18 +1,15 @@
 from flask import Flask, render_template
 import importlib
-import os
+import os, time
 
 app = Flask(__name__)
 
-# List of country scripts (base names without _w)
 COUNTRIES = [
     "Austria", "Belarus", "Bulgaria", "Czechia", "Denmark", "England", "Estonia",
     "Finland", "France", "Germany", "Hungary", "Ireland", "Italy", "Latvia", "Lithuania",
     "Luxembourg", "Netherlands", "Norway", "Poland", "Romania", "Russia",
     "Serbia", "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland", "Ukraine", "Wallonia"
 ]
-
-
 
 RANKING_LINKS = {
     "Austria": {
@@ -137,29 +134,29 @@ RANKING_LINKS = {
     },
 }
 
+# ---- CACHE ----
+CACHE = {"rankings": {}, "last_updated": None}
+CACHE_TTL = 60 * 60  # 1 hour
 
-@app.route("/")
-def index():
+
+def fetch_all_rankings():
     all_rankings = {}
 
     for country in COUNTRIES:
         rankings = {"men": [], "women": []}
 
-        # Try men's rankings
         try:
             men_module = importlib.import_module(f"scripts.{country}")
             rankings["men"] = men_module.get_top5()
         except Exception as e:
             print(f"Error loading men’s rankings for {country}: {e}")
 
-        # Try women's rankings
         try:
             women_module = importlib.import_module(f"scripts.{country}_w")
             rankings["women"] = women_module.get_top5()
         except Exception as e:
             print(f"No women’s rankings for {country}")
 
-        # Add links if available
         links = RANKING_LINKS.get(country, {})
         all_rankings[country] = {
             "men": rankings["men"],
@@ -168,7 +165,28 @@ def index():
             "women_link": links.get("women"),
         }
 
-    return render_template("index.html", rankings=all_rankings)
+    return all_rankings
+
+
+@app.route("/")
+def index():
+    now = time.time()
+
+    # refresh if expired or empty
+    if (
+        not CACHE["rankings"]
+        or not CACHE["last_updated"]
+        or now - CACHE["last_updated"] > CACHE_TTL
+    ):
+        print("Refreshing rankings...")
+        CACHE["rankings"] = fetch_all_rankings()
+        CACHE["last_updated"] = now
+
+    return render_template(
+        "index.html",
+        rankings=CACHE["rankings"],
+        last_updated=time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(CACHE["last_updated"]))
+    )
 
 
 if __name__ == "__main__":
