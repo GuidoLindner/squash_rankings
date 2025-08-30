@@ -138,12 +138,13 @@
                         </tr>
                         {% endfor %}
                     </table>
-                    {% if data.men_link %}
-                    <a href="{{ data.men_link }}" target="_blank">See all</a>
-                    {% endif %}
                     {% else %}
                     <p>No data available.</p>
                     {% endif %}
+                    {% if data.men_link %}
+                    <a href="{{ data.men_link }}" target="_blank">See all</a>
+                    {% endif %}
+                    
                 </div>
 
                 <!-- Women’s rankings -->
@@ -164,11 +165,12 @@
                         </tr>
                         {% endfor %}
                     </table>
-                    {% if data.women_link %}
-                    <a href="{{ data.women_link }}" target="_blank">See all</a>
-                    {% endif %}
+                    
                     {% else %}
                     <p>No women's rankings available.</p>
+                    {% endif %}
+                    {% if data.women_link %}
+                    <a href="{{ data.women_link }}" target="_blank">See all</a>
                     {% endif %}
                 </div>
             </div>
