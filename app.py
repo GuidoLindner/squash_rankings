@@ -134,29 +134,30 @@ RANKING_LINKS = {
     },
 }
 
-
-# ---- CACHE ----
-CACHE = {"rankings": {}, "last_updated": None}
-CACHE_TTL = 60 * 60  # 1 hour
-
-def fetch_all_rankings():
+@app.route("/")
+def index():
     all_rankings = {}
 
     for country in COUNTRIES:
         rankings = {"men": [], "women": []}
 
+        # Try men's rankings
         try:
             men_module = importlib.import_module(f"scripts.{country}")
             rankings["men"] = men_module.get_top5()
         except Exception as e:
             print(f"Error loading men’s rankings for {country}: {e}")
 
+        # Try women's rankings
         try:
             women_module = importlib.import_module(f"scripts.{country}_w")
             rankings["women"] = women_module.get_top5()
         except Exception as e:
+            # It's normal some countries don’t have women’s rankings
             print(f"No women’s rankings for {country}")
 
+        all_rankings[country] = rankings
+        # Add links if available
         links = RANKING_LINKS.get(country, {})
         all_rankings[country] = {
             "men": rankings["men"],
@@ -165,39 +166,8 @@ def fetch_all_rankings():
             "women_link": links.get("women"),
         }
 
-    return all_rankings
+    return render_template("index.html", rankings=all_rankings)
 
-def refresh_cache_periodically():
-    """Background thread that refreshes rankings every CACHE_TTL seconds."""
-    while True:
-        try:
-            print("Refreshing rankings in background...")
-            CACHE["rankings"] = fetch_all_rankings()
-            CACHE["last_updated"] = time.time()
-        except Exception as e:
-            print(f"Error refreshing rankings: {e}")
-        time.sleep(CACHE_TTL)
-
-@app.route("/")
-def index():
-    return render_template(
-        "index.html",
-        rankings=CACHE["rankings"],
-        last_updated=time.strftime(
-            "%Y-%m-%d %H:%M:%S", time.gmtime(CACHE["last_updated"])
-        )
-    )
 
 if __name__ == "__main__":
-    # --- Preload rankings at startup ---
-    print("Fetching initial rankings before serving...")
-    CACHE["rankings"] = fetch_all_rankings()
-    CACHE["last_updated"] = time.time()
-
-    # --- Start background refresh thread ---
-    t = threading.Thread(target=refresh_cache_periodically, daemon=True)
-    t.start()
-
-    # --- Start Flask server ---
-    port = int(os.environ.get("PORT", 10000))
-    app.run(host="0.0.0.0", port=port, debug=True)
+    app.run(debug=True)
