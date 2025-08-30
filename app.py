@@ -1,13 +1,15 @@
 from flask import Flask, render_template
 import importlib
 import os, time
+import threading
 
 app = Flask(__name__)
 
+# ---- CONFIG ----
 COUNTRIES = [
     "Austria", "Belarus", "Bulgaria", "Czechia", "Denmark", "England", "Estonia",
     "Finland", "France", "Germany", "Hungary", "Ireland", "Italy", "Latvia", "Lithuania",
-    "Luxembourg", "Netherlands", "Norway", "Poland", "Romania", "Russia",
+    "Luxembourg", "Netherlands", "Norway", "Poland", "Portugal", "Romania", "Russia",
     "Serbia", "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland", "Ukraine", "Wallonia"
 ]
 
@@ -134,23 +136,24 @@ RANKING_LINKS = {
     },
 }
 
-# ---- CACHE ----
+
 CACHE = {"rankings": {}, "last_updated": None}
 CACHE_TTL = 60 * 60  # 1 hour
-
+REFRESH_INTERVAL = 60 * 30  # background refresh every 30 minutes
 
 def fetch_all_rankings():
     all_rankings = {}
-
     for country in COUNTRIES:
         rankings = {"men": [], "women": []}
 
+        # Men
         try:
             men_module = importlib.import_module(f"scripts.{country}")
             rankings["men"] = men_module.get_top5()
         except Exception as e:
             print(f"Error loading men’s rankings for {country}: {e}")
 
+        # Women
         try:
             women_module = importlib.import_module(f"scripts.{country}_w")
             rankings["women"] = women_module.get_top5()
@@ -167,27 +170,25 @@ def fetch_all_rankings():
 
     return all_rankings
 
+def refresh_cache_background():
+    while True:
+        print("Refreshing rankings in background...")
+        CACHE["rankings"] = fetch_all_rankings()
+        CACHE["last_updated"] = time.time()
+        time.sleep(REFRESH_INTERVAL)
+
+# Start background thread when app starts
+threading.Thread(target=refresh_cache_background, daemon=True).start()
 
 @app.route("/")
 def index():
-    now = time.time()
-
-    # refresh if expired or empty
-    if (
-        not CACHE["rankings"]
-        or not CACHE["last_updated"]
-        or now - CACHE["last_updated"] > CACHE_TTL
-    ):
-        print("Refreshing rankings...")
-        CACHE["rankings"] = fetch_all_rankings()
-        CACHE["last_updated"] = now
-
+    # Serve immediately from cache
+    last_updated = CACHE["last_updated"]
     return render_template(
         "index.html",
         rankings=CACHE["rankings"],
-        last_updated=time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(CACHE["last_updated"]))
+        last_updated=time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(last_updated)) if last_updated else "Never"
     )
-
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
